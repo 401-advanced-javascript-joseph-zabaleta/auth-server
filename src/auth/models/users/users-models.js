@@ -24,6 +24,27 @@ class User extends MongoService {
         //something
     };
 
+    // async uniqueUser(username) {
+    //     let results = await this.getByUsername(username);
+
+    //     if (results !== []) {
+    //        return true
+    //     } else {
+    //         return false;
+    //     }
+
+    // }
+
+    // /**
+    //  * Converts plain text password into a hashed password
+    //  * @param {*} password
+    //  */
+    // hash(password) {
+    //     return bcrypt.hash(password, 5);
+    // };
+
+
+
 };
 
 module.exports = new User();
