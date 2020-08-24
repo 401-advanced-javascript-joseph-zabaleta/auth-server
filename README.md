@@ -3,7 +3,7 @@
 ## Table of Contents
 - [Authentication Server / Module](#authentication-server-/-module)
     - [Overview](#overview)
-    - [Development Process / Milestones](#development-process-/-milestones)
+    - [Development Process](#development-process)
         - [Phase 1: Basic Authentication](#phase-1:-basic-authentication)
         - [Phase 2: OAuth](#phase-2:-OAuth)
         - [Phase 3: Bearer Authentication](#phase-3:-bearer-authentication)
@@ -18,7 +18,7 @@
 
 An Express/Node.js based server using a custom “authentication” module that is designed to handle user registration and sign in using Basic, Bearer, or OAuth along with a custom “authorization” module that will grant/deny users access to the server based on their role or permissions level.
 
-## Development Process / Milestones
+## Development Process
 Current Phase: 1
 
 #### Phase 1: Basic Authentication
