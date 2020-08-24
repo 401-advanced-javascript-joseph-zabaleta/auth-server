@@ -45,4 +45,6 @@ class MongoService {
         return this.schema.findByIdAndDelete(_id);
     };
 
-}
+};
+
+module.exports = MongoService;
