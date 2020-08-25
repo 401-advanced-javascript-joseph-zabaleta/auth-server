@@ -22,7 +22,11 @@ async function basicAuth(req, res, next) {
 
         next();
     } else {
-        next('Invalid Login');
+        next({
+            'message': 'Invalid Username or Password',
+            'status': 401,
+            'statusMessage': 'Unauthorized',
+        });
     };
 
 

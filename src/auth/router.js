@@ -8,7 +8,6 @@ const router = express.Router();
 /** Local */
 const user = require('./models/users/users-models.js');
 const basicAuth = require('./middleware/basic.js');
-const { response } = require('express');
 
 /** Routes */
 router.post('/signup', signUp);
@@ -17,7 +16,6 @@ router.get('/users', getUsers) //add middleware
 
 
 /** Route Callbacks */
-
 
 /**
  * SignUp will create a new user and save them to the database.
@@ -50,6 +48,11 @@ async function signUp(req, res) {
 };
 
 
+/**
+ * SignIn will update the response header and token with the users token value upon validation of users authentication.
+ * @param {*} req
+ * @param {*} res
+ */
 async function signIn(req, res) {
 
     if (req.token) {
@@ -63,6 +66,11 @@ async function signIn(req, res) {
 };
 
 
+/**
+ * getUsers will query the database for all user accounts.
+ * @param {*} req
+ * @param {*} res
+ */
 async function getUsers(req, res) {
     let results = await user.get();
     res.send(results);

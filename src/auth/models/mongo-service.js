@@ -35,23 +35,23 @@ class MongoService {
         return this.schema.findOne({ username: username });
     };
 
-    /**
-     * Updates a record within the database
-     * @param {*} _id ID of target record
-     * @param {*} body JSON object formatted to proper schema requirements
-     */
-    update(_id, body) {
-        return this.schema.updateOne( {_id }, body);
-    };
+    // /**
+    //  * Updates a record within the database
+    //  * @param {*} _id ID of target record
+    //  * @param {*} body JSON object formatted to proper schema requirements
+    //  */
+    // update(_id, body) {
+    //     return this.schema.updateOne( {_id }, body);
+    // };
 
 
-    /**
-     * Deletes a record within the database
-     * @param {*} _id ID of target record
-     */
-    delete(_id) {
-        return this.schema.findByIdAndDelete(_id);
-    };
+    // /**
+    //  * Deletes a record within the database
+    //  * @param {*} _id ID of target record
+    //  */
+    // delete(_id) {
+    //     return this.schema.findByIdAndDelete(_id);
+    // };
 
 };
 
