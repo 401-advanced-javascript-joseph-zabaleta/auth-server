@@ -17,25 +17,32 @@ class User extends MongoService {
     };
 
 
-    async authenticateUser(username, password) {
+    static async authenticateBasic(username, password) {
+        try {
+            let results = await schema.findOne({ username: username });
 
-        let results = await this.getByUsername(username);
+            if (!results) {
+                return false;
+            };
 
-        if (!results) {
-            return false;
-        };
+            let valid = await bcrypt.compare(password, results.password);
 
-        let valid = await bcrypt.compare(password, results.password);
+            if (valid) {
+                return results;
+            } else {
+                return false;
+            };
 
-        if (valid) {
-            return results;
-        } else {
-            return false;
-        };
+        } catch (err) {
+            console.log('error in authBasic');
+            throw err;
+
+        }
+
 
     };
 
-    generateToken(username) {
+    static generateToken(username) {
         return jwt.sign(username, process.env.SECRET);
     };
 
@@ -65,4 +72,4 @@ class User extends MongoService {
 
 };
 
-module.exports = new User();
+module.exports = User;

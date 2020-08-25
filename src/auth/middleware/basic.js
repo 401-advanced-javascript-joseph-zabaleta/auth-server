@@ -4,29 +4,24 @@
 const base64 = require('base-64');
 
 /** Local */
-const user = require('../models/users/users-models.js');
+const User = require('../models/users/users-models.js');
 
 async function basicAuth(req, res, next) {
 
     let basic = req.headers.authorization.split(' ').pop();
-    let [username, password] = await base64.decode(basic).split(':');
+    let [username, password] = base64.decode(basic).split(':');
 
-    let current = await user.authenticateUser(username, password);
+    let current = await User.authenticateBasic(username, password);
 
     if (current) {
 
-        req.token = {
-            username: current,
-            token: user.generateToken(username),
-        };
-
+        req.token = User.generateToken(username);
         next();
+
     } else {
-        next({
-            'message': 'Invalid Username or Password',
-            'status': 401,
-            'statusMessage': 'Unauthorized',
-        });
+
+        res.status(401).send('Invalid Credentials');
+
     };
 
 

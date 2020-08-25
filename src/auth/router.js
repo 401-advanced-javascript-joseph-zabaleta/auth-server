@@ -6,14 +6,16 @@ const router = express.Router();
 
 
 /** Local */
-const user = require('./models/users/users-models.js');
+const User = require('./models/users/users-models.js');
+const user = new User();
 const basicAuth = require('./middleware/basic.js');
+const oauth = require('./middleware/oauth.js');
 
 /** Routes */
 router.post('/signup', signUp);
 router.post('/signin', basicAuth, signIn);
-router.get('/users', getUsers) //add middleware
-
+router.get('/users', getUsers) // add middleware to restrict
+router.get('/oauth', oauth, approved);
 
 /** Route Callbacks */
 
@@ -38,7 +40,9 @@ async function signUp(req, res) {
            password: req.body.password,
        });
 
-       res.status(200).send(newUser);
+       let token = user.generateToken(newUser.username);
+
+       res.status(200).send(token);
 
    } catch (err) {
         console.log('Failed on signup user creation');
@@ -55,13 +59,9 @@ async function signUp(req, res) {
  */
 async function signIn(req, res) {
 
-    if (req.token) {
-        res.cookie('token', req.token.token);
-        res.header('token', req.token.token);
-        res.status(200).send(req.token);
-    } else {
-        res.status(403).send('Invalid Credentials');
-    };
+    res.cookie('token', req.token.token);
+    res.header('token', req.token.token);
+    res.status(200).send(req.token);
 
 };
 
@@ -74,6 +74,12 @@ async function signIn(req, res) {
 async function getUsers(req, res) {
     let results = await user.get();
     res.status(200).send(results);
+};
+
+
+
+function approved(req, res) {
+    res.status(200).send(req.token);
 };
 
 module.exports = router;
