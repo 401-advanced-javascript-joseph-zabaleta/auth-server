@@ -27,13 +27,13 @@ class MongoService {
     };
 
 
-    // /**
-    //  * Retreives a single record based on the provided username.
-    //  * @param {*} username
-    //  */
-    // getByUsername(username) {
-    //     return this.schema.find({ username });
-    // };
+    /**
+     * Retreives a single record based on the provided username.
+     * @param {*} username
+     */
+    getByUsername(username) {
+        return this.schema.findOne({ username: username });
+    };
 
     /**
      * Updates a record within the database

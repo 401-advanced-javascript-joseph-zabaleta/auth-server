@@ -7,11 +7,12 @@ const router = express.Router();
 
 /** Local */
 const user = require('./models/users/users-models.js');
+const basicAuth = require('./middleware/basic.js');
 const { response } = require('express');
 
 /** Routes */
 router.post('/signup', signUp);
-router.post('/signin', signIn); //add middleware
+router.post('/signin', basicAuth, signIn);
 router.get('/users', getUsers) //add middleware
 
 
@@ -25,11 +26,12 @@ router.get('/users', getUsers) //add middleware
  */
 async function signUp(req, res) {
 
+    let valid = await user.validateUsername(req.body.username);
 
-    // if (user.uniqueUser(req.body.username)) {
-    //     response.send('Username is already in use.');
-    //     return;
-    // };
+    if (valid) {
+        res.send('Username is already in use.');
+        return;
+    };
 
    try {
 
@@ -49,12 +51,21 @@ async function signUp(req, res) {
 
 
 async function signIn(req, res) {
-    //something
+
+    if (req.token) {
+        res.cookie('token', req.token.token);
+        res.header('token', req.token.token);
+        res.status(200).send(req.token);
+    } else {
+        res.status(403).send('Invalid Credentials');
+    };
+
 };
 
 
 async function getUsers(req, res) {
-    //something
+    let results = await user.get();
+    res.send(results);
 };
 
 module.exports = router;

@@ -23,27 +23,34 @@ schema.pre('save', async function() {
 });
 
 
-schema.statics.authenticateBasic = function (username, password) {
-    let query = { username };
+// schema.statics.authenticateBasic = function (username, password) {
+//     let query = { username };
 
-    return this.findOne(query)
-        .then(user => {
-            console.log('username found', user);
-            //user && user.comparePassword(password)
-        })
-        .catch( (err) => {
-            console.log('something broke!')
-        });
-};
+//     return this.findOne(query)
+//         .then(user => {
+//             console.log('username found', user);
+//             //user && user.comparePassword(password)
+//         })
+//         .catch( (err) => {
+//             console.log('something broke!')
+//         });
+// };
 
 
-schema.methods.comparePassword = function(plainPassword) {
-    return bcrypt.compare(plainPassword, this.password);
-};
+// schema.methods.comparePassword = function(plainPassword) {
+//     return bcrypt.compare(plainPassword, this.password)
+//         .then( results => {
+//             if (results) {
+//                 return this;
+//             } else {
+//                 return
+//             }
+//         })
+// };
 
-schema.methods.generateToken = function() {
-    //something
-};
+// schema.methods.generateToken = function() {
+//     //something
+// };
 
 
 module.exports = mongoose.model('user', schema);

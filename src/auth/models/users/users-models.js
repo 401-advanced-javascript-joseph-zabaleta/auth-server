@@ -1,6 +1,7 @@
 'use strict';
 
 /** 3rd Party */
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -16,34 +17,51 @@ class User extends MongoService {
     };
 
 
-    authenticateUser(username, password) {
-        //something
+    async authenticateUser(username, password) {
+
+        let results = await this.getByUsername(username);
+
+        if (!results) {
+            return false;
+        };
+
+        let valid = await bcrypt.compare(password, results.password);
+
+        if (valid) {
+            return results;
+        } else {
+            return false;
+        };
+
     };
 
     generateToken(username) {
-        //something
+        return jwt.sign(username, process.env.SECRET);
     };
 
-    // async uniqueUser(username) {
-    //     let results = await this.getByUsername(username);
+    comparePassword(password) {
+        return bcrypt.compare(password, this.password)
+            .then(results => {
+                if (results) {
+                    return this;
+                } else {
+                    return;
+                };
+            }).catch( (err) => {
+                console.log('compare fail');
+            });
+    }
 
-    //     if (results !== []) {
-    //        return true
-    //     } else {
-    //         return false;
-    //     }
+    async validateUsername(username) {
+        let results = await this.getByUsername(username);
 
-    // }
+        if (!results) {
+            return false;
+        }
 
-    // /**
-    //  * Converts plain text password into a hashed password
-    //  * @param {*} password
-    //  */
-    // hash(password) {
-    //     return bcrypt.hash(password, 5);
-    // };
+        return true;
 
-
+    };
 
 };
 
