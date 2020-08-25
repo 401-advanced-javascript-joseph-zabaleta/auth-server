@@ -42,7 +42,7 @@ class User extends MongoService {
 
     };
 
-    static generateToken(username) {
+    generateToken(username) {
         return jwt.sign(username, process.env.SECRET);
     };
 
