@@ -73,7 +73,7 @@ async function signIn(req, res) {
  */
 async function getUsers(req, res) {
     let results = await user.get();
-    res.send(results);
+    res.status(200).send(results);
 };
 
 module.exports = router;
