@@ -6,16 +6,17 @@ const User = require('../models/users/users-models.js');
 async function bearer(req, res, next) {
 
     if (!req.headers.authorization) {
-        res.status(401).send('No authorization headers');
-      }
+        res.status(401).send('No Authorization headers');
+        return;
+    }
 
-      let [authType, token] = req.headers.authorization.split(' ');
+    let [authType, token] = req.headers.authorization.split(' ');
 
-      try {
-          let validUser = await User.verifyToken(token);
-          req.user = validUser;
-          next();
-      } catch (err) {
+    try {
+        let validUser = await User.verifyToken(token);
+        req.user = validUser;
+        next();
+    } catch (err) {
 
         if (err.name === 'TokenExpiredError') {
             res.status(401).send('Token Expired Please log in again.');
@@ -25,7 +26,7 @@ async function bearer(req, res, next) {
         };
 
 
-      };
+    };
 
 
 
