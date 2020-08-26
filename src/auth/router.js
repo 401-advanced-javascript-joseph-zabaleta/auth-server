@@ -10,11 +10,12 @@ const User = require('./models/users/users-models.js');
 const user = new User();
 const basicAuth = require('./middleware/basic.js');
 const oauth = require('./middleware/oauth.js');
+const bearer = require('./middleware/bearer.js');
 
 /** Routes */
 router.post('/signup', signUp);
 router.post('/signin', basicAuth, signIn);
-router.get('/users', getUsers) // add middleware to restrict
+router.get('/users', bearer, getUsers) // add middleware to restrict
 router.get('/oauth', oauth, approved);
 
 /** Route Callbacks */
@@ -61,7 +62,10 @@ async function signIn(req, res) {
 
     res.cookie('token', req.token.token);
     res.header('token', req.token.token);
-    res.status(200).send(req.token);
+    res.status(200).send({
+        token: req.token,
+        user: req.user,
+    });
 
 };
 
@@ -79,6 +83,7 @@ async function getUsers(req, res) {
 
 
 function approved(req, res) {
+    console.log(req.user);
     res.status(200).send(req.token);
 };
 

@@ -44,8 +44,21 @@ class User extends MongoService {
 
     generateToken(username) {
         //maybe sign with an object not a string to include username, and expiration at a minimum
-        return jwt.sign(username, process.env.SECRET);
+
+
+        let obj = {
+            username: username,
+            exp: Math.floor(Date.now() / 1000) + (60 * 60),
+        };
+
+        let output = jwt.sign(obj, process.env.SECRET);
+        return output;
     };
+
+
+    static async verifyToken(token) {
+        return jwt.verify(token, process.env.SECRET);
+    }
 
     comparePassword(password) {
         return bcrypt.compare(password, this.password)

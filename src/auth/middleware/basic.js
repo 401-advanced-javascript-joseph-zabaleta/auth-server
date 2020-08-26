@@ -16,6 +16,7 @@ async function basicAuth(req, res, next) {
 
     if (current) {
 
+        req.user = username;
         req.token = user.generateToken(username);
         next();
 
