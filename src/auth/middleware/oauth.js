@@ -10,7 +10,7 @@ const userC = new User();
 
 const tokenServerUrl = 'https://github.com/login/oauth/access_token';
 const remoteAPI = 'https://api.github.com/user';
-const API_SERVER = 'http://localhost:3001/oauth';
+const API_SERVER = 'http://localhost:3001/api/v1/oauth';
 const CLIENT_ID = process.env.GH_ID;
 const CLIENT_SECRET = process.env.GH_SECRET;
 
@@ -52,7 +52,7 @@ async function authorize(req, res, next) {
 
     return access_token;
 
-  }
+  };
 
   async function getRemoteUserInfo(token) {
 
@@ -65,7 +65,7 @@ async function authorize(req, res, next) {
 
     return user;
 
-  }
+  };
 
   async function getUser(remoteUser) {
     let userRecord = {
@@ -78,6 +78,6 @@ async function authorize(req, res, next) {
 
     return [user, token];
 
-  }
+  };
 
   module.exports = authorize;

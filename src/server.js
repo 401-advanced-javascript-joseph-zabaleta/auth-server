@@ -14,7 +14,7 @@ const worstCaseHandler = require('../src/middleware/500.js');
 
 
 /** Routes */
-app.use(router);
+app.use('/api/v1',router);
 app.use('*', errorHandler);
 app.use(worstCaseHandler);
 

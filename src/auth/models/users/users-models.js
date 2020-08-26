@@ -43,6 +43,7 @@ class User extends MongoService {
     };
 
     generateToken(username) {
+        //maybe sign with an object not a string to include username, and expiration at a minimum
         return jwt.sign(username, process.env.SECRET);
     };
 

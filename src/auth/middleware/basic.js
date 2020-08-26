@@ -5,6 +5,7 @@ const base64 = require('base-64');
 
 /** Local */
 const User = require('../models/users/users-models.js');
+const user = new User();
 
 async function basicAuth(req, res, next) {
 
@@ -15,7 +16,7 @@ async function basicAuth(req, res, next) {
 
     if (current) {
 
-        req.token = User.generateToken(username);
+        req.token = user.generateToken(username);
         next();
 
     } else {
