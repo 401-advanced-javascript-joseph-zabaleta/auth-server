@@ -39,14 +39,15 @@ async function signUp(req, res) {
        let newUser = await user.create({
            username: req.body.username,
            password: req.body.password,
+           role: req.body.role ? req.body.role : 'user',
        });
 
-       let token = user.generateToken(newUser.username);
+       let token = user.generateToken(newUser);
 
        res.status(200).send(token);
 
    } catch (err) {
-        console.log('Failed on signup user creation');
+
         throw err;
    };
 

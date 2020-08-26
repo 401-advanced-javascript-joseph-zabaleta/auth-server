@@ -14,7 +14,7 @@ beforeAll( async () => {
 });
 
 
-describe('Name of the group', () => {
+describe('Testing Mongo service Functionality: ', () => {
 
     it('Should create() a new user record', async () => {
 
