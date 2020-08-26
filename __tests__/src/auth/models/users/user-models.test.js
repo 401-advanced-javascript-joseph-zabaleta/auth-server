@@ -9,7 +9,7 @@ let testUser1 = { username: 'admin', password: 'password' };
 let testUser2 = { username: 'bob', password: 'password' };
 let SECRET = 'theSuperSecretMessage';
 
-describe('Testing Users Model Functionality: ', () => {
+describe.skip('Testing Users Model Functionality: ', () => {
 
     it('Should create() a new user record', async () => {
 

@@ -1,53 +1,63 @@
 'use strict';
 
 require('@code-fellows/supergoose');
-const basicAuth = require('../../../../src/auth/middleware/basic.js');
-const user = require('../../../../src/auth/models/users/users-models.js');
+const auth = require('../../../../src/auth/middleware/basic');
+const Users = require('../../../../src/auth/models/users/users-models.js');
+process.env.SECRET = 'muysecreto';
+let testUser = { username: 'admin', password: 'password', role: 'admin', email: 'admin@admin.com' }
 
-describe.skip('Testing Basic Auth Middleware: ', () => {
+jest.mock('../../../../src/auth/models/users/users-models.js');
 
-    let errorObject = {'message': 'Invalid Username or Password', 'status': 401, 'statusMessage': 'Unauthorized'};
 
-    beforeAll( async (done) => {
-        await user.create({
-            username: 'admin',
-            password: 'password',
+describe('Testing Basic Auth Middleware Functionality: ', () => {
+
+    it('fails a login for a user (admin) with the incorrect basic credentials', async () => {
+
+        Users.authenticateBasic.mockImplementation(() => {
+            return null;
         });
-    });
 
-    it('Should fail to login for a user with the incorrect basic credentials', async () => {
         let req = {
             headers: {
-                authorization: 'Basic YWRtaW46Zm9v'
+                authorization: 'Basic YWRtaW46Zm9v',
+            },
+        };
+
+        let res = {};
+
+        res.status = jest.fn(() => {
+            return res;
+        });
+        res.send = jest.fn();
+
+        let next = jest.fn();
+
+        await auth(req, res, next);
+
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.send).toHaveBeenCalledWith('Invalid Credentials');
+
+    });
+
+    it('logs in an admin user with the right credentials', async () => {
+
+        Users.authenticateBasic.mockImplementation(() => {
+            return testUser;
+        });
+
+        let req = {
+            headers: {
+                authorization: 'Basic YWRtaW46cGFzc3dvcmQ=',
             },
         };
 
         let res = {};
         let next = jest.fn();
 
-        await basicAuth(req, res, next);
-
-        let actual = 'Invalid Login'
-
-        expect(next).toHaveBeenCalledWith(errorObject);
-
-    });
-
-    it('Should log in as a user with valid credentials', async () => {
-
-        let req = {
-            headers: {
-                authorization: 'Basic YWRtaW46cGFzc3dvcmQ='
-            },
-        };
-
-        let res = {};
-        let next = jest.fn();
-
-        await basicAuth(req, res, next);
+        await auth(req, res, next);
 
         expect(next).toHaveBeenCalledWith();
+        expect(req.user).toEqual(testUser.username);
 
     });
-
 });

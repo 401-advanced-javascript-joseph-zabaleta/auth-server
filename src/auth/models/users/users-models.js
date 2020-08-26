@@ -22,7 +22,7 @@ class User extends MongoService {
             let results = await schema.findOne({ username: username });
 
             if (!results) {
-                return false;
+                return null;
             };
 
             let valid = await bcrypt.compare(password, results.password);
@@ -30,7 +30,7 @@ class User extends MongoService {
             if (valid) {
                 return results;
             } else {
-                return false;
+                return null;
             };
 
         } catch (err) {
@@ -42,12 +42,13 @@ class User extends MongoService {
 
     };
 
-    generateToken(username) {
+    generateToken(currentUser) {
         //maybe sign with an object not a string to include username, and expiration at a minimum
 
 
         let obj = {
-            username: username,
+            username: currentUser.username,
+            role: currentUser.role,
             exp: Math.floor(Date.now() / 1000) + (60 * 60),
         };
 
@@ -68,7 +69,7 @@ class User extends MongoService {
                 } else {
                     return;
                 };
-            }).catch( (err) => {
+            }).catch((err) => {
                 console.log('compare fail');
             });
     }

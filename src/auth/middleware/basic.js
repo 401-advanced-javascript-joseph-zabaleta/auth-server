@@ -16,8 +16,8 @@ async function basicAuth(req, res, next) {
 
     if (current) {
 
-        req.user = username;
-        req.token = user.generateToken(username);
+        req.user = current.username;
+        req.token = user.generateToken(current);
         next();
 
     } else {
@@ -25,7 +25,6 @@ async function basicAuth(req, res, next) {
         res.status(401).send('Invalid Credentials');
 
     };
-
 
 };
 
