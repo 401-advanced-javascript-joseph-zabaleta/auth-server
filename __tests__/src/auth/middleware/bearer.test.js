@@ -1,8 +1,9 @@
 'use strict';
 
+const { TokenExpiredError } = require('jsonwebtoken');
+
 const bearer = require('../../../../src/auth/middleware/bearer.js');
 const Users = require('../../../../src/auth/models/users/users-models.js');
-const { TokenExpiredError } = require('jsonwebtoken');
 
 jest.mock('../../../../src/auth/models/users/users-models.js');
 

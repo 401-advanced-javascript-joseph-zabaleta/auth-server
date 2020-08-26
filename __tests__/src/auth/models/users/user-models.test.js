@@ -1,78 +1,103 @@
 'use strict';
 
 require('@code-fellows/supergoose');
-const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
-const user = require('../../../../../src/auth/models/users/users-models.js');
-
+const User = require('../../../../../src/auth/models/users/users-models.js');
+let user = new User();
 let testUser1 = { username: 'admin', password: 'password' };
 let testUser2 = { username: 'bob', password: 'password' };
-let SECRET = 'theSuperSecretMessage';
 
-describe.skip('Testing Users Model Functionality: ', () => {
+jest.mock('bcrypt');
 
-    it('Should create() a new user record', async () => {
+let spyLog = jest.spyOn(console, 'log');
+beforeEach(() => {
+    spyLog.mockReset();
+    bcrypt.compare.mockReset();
+});
 
-        let newUser = await user.create(testUser1);
+beforeAll(async () => {
+    await user.create(testUser1);
+})
 
-        expect(newUser.username).toEqual(testUser1.username);
-        expect(newUser.password).not.toEqual(testUser1.password);
+
+describe('Testing Users Model Functionality: ', () => {
+
+    describe('Testing authenticateBasic method: ', () => {
+
+        it('Should return user object of authorized user during validation check', async () => {
+
+            bcrypt.compare.mockImplementation(() => {
+                return true;
+            });
+
+            let results = await User.authenticateBasic('admin', 'password');
+
+            expect(results.username).toEqual('admin');
+            expect(results.role).toEqual('user');
+
+        });
+
+        it('Should return null for unauthorized user during validation check', async () => {
+
+            bcrypt.compare.mockImplementation(() => {
+                return false;
+            });
+
+            let results = await User.authenticateBasic('admin', 'fakePassword');
+
+            expect(results).toBeNull();
+        });
+
+
+        it('Should return null for unauthorized user during validation check when no user is found', async () => {
+
+            let results = await User.authenticateBasic('FakeAdmin', 'fakePassword');
+
+            expect(results).toBeNull();
+        });
+
+
+        it('Should throw an error if something goes wrong', async () => {
+
+            let myError = new Error('test')
+
+            bcrypt.compare.mockImplementation(() => {
+                throw myError;
+            });
+
+            try {
+                await User.authenticateBasic('admin', 'fakePassword');
+            } catch (err) {
+                expect(err).toEqual(myError);
+            };
+
+        });
+
+
     });
 
 
-    it('Should get() by id', async () => {
-        let newUser = await user.create(testUser1);
+    describe('Testing validateUsername method: ', () => {
 
-        let record = await user.get(newUser._id);
+        it('Should return true for a valid user', async () => {
 
-        expect(record.length).toEqual(1);
-        expect(record[0].username).toEqual(testUser1.username);
+            let actual = await user.validateUsername(testUser1.username);
 
-    });
+            expect(actual).toEqual(true);
 
 
-    it('Should get() by username', async () => {
-        let newUser = await user.create(testUser1);
+        });
 
-        let record = await user.getByUsername(newUser.username);
+        it('Should return false for a valid user', async () => {
 
-        expect(record.username).toEqual(testUser1.username);
-    });
+            let actual = await user.validateUsername(testUser2.username);
 
+            expect(actual).toEqual(false);
 
-    it('Should return true for authorized user during validation check', async () => {
-
-        let results = await user.authenticateUser('admin', 'password');
-
-        expect(results).toBeTruthy();
+        });
 
     });
 
-    it('Should return false for unauthorized user during validation check', async () => {
-
-        let results = await user.authenticateUser('FakeUser', 'fakePassword');
-
-        expect(results).toBeFalsy();
-    });
-
-    it('Should generate a JWT for a user', async () => {
-        let newUser = await user.create(testUser1);
-
-        let token = await user.generateToken(newUser.username);
-
-        let success = jwt.verify(token, SECRET);
-
-        expect(success).toBeDefined();
-    });
-
-    it('Should compare passwords properly', async () => {
-        let newUser = await user.create(testUser1);
-
-        let plainPassword = 'password'
-
-        let compared = await user.comparePassword(plainPassword, newUser.password);
-
-        console.log(compared);
-    });
 
 });

@@ -34,7 +34,7 @@ class User extends MongoService {
             };
 
         } catch (err) {
-            console.log('error in authBasic');
+            console.log(err);
             throw err;
 
         }
@@ -61,27 +61,11 @@ class User extends MongoService {
         return jwt.verify(token, process.env.SECRET);
     }
 
-    comparePassword(password) {
-        return bcrypt.compare(password, this.password)
-            .then(results => {
-                if (results) {
-                    return this;
-                } else {
-                    return;
-                };
-            }).catch((err) => {
-                console.log('compare fail');
-            });
-    }
 
     async validateUsername(username) {
         let results = await this.getByUsername(username);
 
-        if (!results) {
-            return false;
-        }
-
-        return true;
+        return results ? true : false;
 
     };
 
