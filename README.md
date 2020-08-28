@@ -19,7 +19,7 @@
 An Express/Node.js based server using a custom “authentication” module that is designed to handle user registration and sign in using Basic, Bearer, or OAuth along with a custom “authorization” module that will grant/deny users access to the server based on their role or permissions level.
 
 ## Development Process
-Current Phase: 3
+Current Phase: 4
 
 #### Phase 1: Basic Authentication
 
@@ -51,6 +51,11 @@ Current Phase: 3
 - To start this server the following commands are supported:
     - `npm start`
     - `node index.js`
+- Do not forget to provide the following environment variables:
+    - `PORT`= Set a default port value, if not added, 3000 will be used.
+    - `SECRET`= A secret key used to sign/verify json web tokens
+    - `GH_ID`= OAuth routes are using an application, this is a github oauth app id
+    - `GH_SECRET`= This is the github oauth app secret key
 
 ## Author
 - Software Developer: Joseph Zabaleta

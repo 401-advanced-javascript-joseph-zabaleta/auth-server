@@ -42,6 +42,10 @@ class User extends MongoService {
 
     };
 
+    static async verifyToken(token) {
+        return jwt.verify(token, process.env.SECRET);
+    }
+
     generateToken(currentUser) {
         //maybe sign with an object not a string to include username, and expiration at a minimum
 
@@ -56,18 +60,13 @@ class User extends MongoService {
         return output;
     };
 
-
-    static async verifyToken(token) {
-        return jwt.verify(token, process.env.SECRET);
-    }
-
-
     async validateUsername(username) {
         let results = await this.getByUsername(username);
 
         return results ? true : false;
 
     };
+
 
 };
 

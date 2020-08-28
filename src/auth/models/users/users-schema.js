@@ -10,7 +10,7 @@ const schema = new mongoose.Schema({
     password: { type: String, required: true },
     email: { type: String },
     fullname: { type: String },
-    role: { type: String, default: 'user', enum: ['admin', 'editor', 'user'] },
+    role: { type: String, default: 'user', enum: ['admin', 'editor', 'user', 'writer'] },
 });
 
 
