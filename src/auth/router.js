@@ -11,6 +11,7 @@ const user = new User();
 const basicAuth = require('./middleware/basic.js');
 const oauth = require('./middleware/oauth.js');
 const bearer = require('./middleware/bearer.js');
+const worstCaseHandler = require('../middleware/500.js');
 
 /** Routes */
 router.post('/signup', signUp);
@@ -48,7 +49,7 @@ async function signUp(req, res) {
 
    } catch (err) {
 
-        throw err;
+        worstCaseHandler(err, res);
    };
 
 };

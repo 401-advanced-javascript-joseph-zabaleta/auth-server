@@ -25,6 +25,14 @@ describe('Router IT Tests', () => {
     describe('Testing /signup route: ', () => {
 
 
+        it('Should handle deal with an invalid request body', async () => {
+
+            let results = await mockRequest.post(version + '/signup').send({});
+
+            expect(results.status).toEqual(500);
+
+        });
+
         it('Should properly post / sign up a new unique user', async () => {
 
             let res = await mockRequest.post(version + '/signup').send(userData1);
